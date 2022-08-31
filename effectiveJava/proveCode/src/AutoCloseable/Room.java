@@ -12,10 +12,9 @@ public class Room implements AutoCloseable{
             this.numJunkPiles = numJunkPiles;
         }
 
-        //close메서드나 cleaner가 호출
         @Override
-        public void run() {
-            System.out.println("방 청소");
+        public void run() { //close메서드나 cleaner가 호출
+            System.out.println("**방 청소**");
             numJunkPiles = 0;
         }
     }
@@ -26,10 +25,14 @@ public class Room implements AutoCloseable{
     public Room(int numJunkPiles){
         state = new State(numJunkPiles);
         cleanable = cleaner.register(this, state);
+        System.out.println("aa");
     }
 
     @Override
     public void close() throws Exception {
+        System.out.println("청소 전");
+        Thread.sleep(1000);
         cleanable.clean();
+        System.out.println("청소 후");
     }
 }
