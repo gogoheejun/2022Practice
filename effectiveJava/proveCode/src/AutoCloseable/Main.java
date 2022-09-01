@@ -10,9 +10,7 @@ public class Main {
         }
         //try with resource구문이 끝나면서 자동으로 close()메서드가 실행되면서
         //cleanable.clean()을 실행하면 run()이 실행되면서
-        System.out.println("늦었지");
 
-        Thread.sleep(10000);
         System.out.println("끝");
 
 
