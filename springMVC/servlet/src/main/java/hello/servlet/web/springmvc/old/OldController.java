@@ -26,6 +26,17 @@ public class OldController implements Controller {
     @Override
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
         System.out.println("OldController.handleRequest");
-        return null;
+
+        /*
+        * ViewResolver관련 호출 순서
+        뷰리졸버는 다음 우선순위로 동작.
+        0순위: BeanNameViewResolver : 빈이름으로 뷰를 찾아서 반환
+        1순위: InternalResourceViewResolver: JSP를 처리할 수 있는 뷰를 반환한다
+        *
+        역기서 그럼, new-form이라는 뷰일므으로 viewResolver를 순서대로 호출하는데,
+        BeanNameViewResolver는 new-form이라는 이름의 스프링 빈으로 등록된 뷰를 찾아야 하는데 없으니 패스!
+        그담에 InternalResourceViewResolver가 호출되서 new-from을 경로에서 찾은거임
+         */
+        return new ModelAndView("new-form");
     }
 }
