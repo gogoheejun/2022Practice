@@ -22,7 +22,7 @@ public class MappingController {
     }
 
     //변수명이 같으면 생략가능
-    @GetMapping("/mapping/{userId}")
+    @GetMapping("/mapping2/{userId}")
     public String mappingPath2(@PathVariable String userId){
         log.info("mappingPath userId={}", userId);
         return "ok";
@@ -30,7 +30,7 @@ public class MappingController {
 
     //다중 매핑
     @GetMapping("/mapping/users/{userId}/orders/{orderId}")
-    public String mappingPath2(@PathVariable String userId, @PathVariable Long orderId){
+    public String mappingPath3(@PathVariable String userId, @PathVariable Long orderId){
         log.info("mappingPath userId={}, orderId={}", userId, orderId);
         return "ok";
     }
