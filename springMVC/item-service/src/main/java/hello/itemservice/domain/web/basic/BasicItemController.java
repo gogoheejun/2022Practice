@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -81,12 +82,33 @@ public class BasicItemController {
     ModelAttribute생략가능! 기본타입들은 RequestParam이 적용되지만
     그 외 타입은 ModelAttribute이 적용됨
      */
-    @PostMapping("/add")
+    //@PostMapping("/add")
     public String addItemV4(Item item){
         itemRepository.save(item);
         return "basic/item";
     }
 
+    /**
+    주의! 리다이렉트를 하지 않으면, 브라우저에서 새로고침하면 이전에 했던 행위를 그대로 하므로
+     데이터를 또 전송해서 등록이 되어버리는 사고가 발생한다.
+     그래서 redirect를 해주면 브라우저가 다시 해당 url로 요청하는 것이 되므로,
+     새로고침해도 get만 됨.
+     */
+    //@PostMapping("/add")
+    public String addItemV5(Item item){
+        itemRepository.save(item);
+        return "redirect:/basic/items/"+item.getId();
+    }
+
+    @PostMapping("/add")
+    public String addItemV6(Item item, RedirectAttributes redirectAttributes){
+        Item savedItem = itemRepository.save(item);
+        redirectAttributes.addAttribute("itemId", savedItem.getId());//pathVariable로 바인딩
+        redirectAttributes.addAttribute("status", true);// 얘는 쿼리파라미터로 처리됨 -> basic/item.html에서 ${param.status} 이케 쓰임
+        return "redirect:/basic/items/{itemId}";
+    }
+
+    //========수정=============
     @GetMapping("/{itemId}/edit")
     public String editForm(@PathVariable Long itemId, Model model){
         Item item = itemRepository.findById(itemId);
