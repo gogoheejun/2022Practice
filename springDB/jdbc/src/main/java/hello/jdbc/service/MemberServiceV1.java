@@ -16,10 +16,13 @@ public class MemberServiceV1 {
         Member toMember = memberRepository.findById(toId);
 
         memberRepository.update(fromId, fromMember.getMoney()-money);
+        validation(toMember);
+        memberRepository.update(toId, fromMember.getMoney()+money);
+    }
+
+    private void validation(Member toMember) {
         if(toMember.getMemberId().equals("ex")){
             throw new IllegalStateException("이체중 예외 발생!");
         }
-        memberRepository.update(toId, fromMember.getMoney()+money);
-
     }
 }
