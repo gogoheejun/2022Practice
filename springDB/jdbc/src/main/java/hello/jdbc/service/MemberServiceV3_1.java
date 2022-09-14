@@ -47,18 +47,6 @@ public class MemberServiceV3_1 {
         validation(toMember);
         memberRepository.update(toId, fromMember.getMoney()+ money);
     }
-
-    private void release(Connection con) {
-        if( con != null){
-            try{
-                con.setAutoCommit(true);// true가 기본값이기 때문. 걍 커넥션풀로 돌려버리면 다른 세션이 와서 그 커넥션 쓰면 고대로 false상태임
-                con.close();
-            }catch (Exception e){
-                log.info("error", e);
-            }
-        }
-    }
-
     private void validation(Member toMember) {
         if(toMember.getMemberId().equals("ex")){
             throw new IllegalStateException("이체중 예외 발생!");

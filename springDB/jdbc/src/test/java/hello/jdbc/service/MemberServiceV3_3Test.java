@@ -8,10 +8,15 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import javax.sql.DataSource;
 import java.sql.SQLException;
 
 import static hello.jdbc.connection.ConnectionConst.*;
@@ -20,22 +25,47 @@ import static hello.jdbc.connection.ConnectionConst.*;
  * 트랜잭션 - 트랜잭션 매니저 사용
  */
 @Slf4j
-class MemberServiceV3_2Test {
+@SpringBootTest // @Transactional을 쓰기 위해선 스프링이 떠야 함... 해당 어노테이션으로 테스트 시 스프링부트를 통해 스프링컨테이너 생성
+class MemberServiceV3_3Test {
     public static final String MEMBER_A = "memberA";
     public static final String MEMBER_B = "memberB";
     public static final String MEMBER_EX = "ex";
 
+    @Autowired
     private MemberRepositoryV3 memberRepository;
-    private MemberServiceV3_2 memberService;
+    @Autowired
+    private MemberServiceV3_3 memberService;
 
-    @BeforeEach
-    void before(){
-        DriverManagerDataSource dataSource = new DriverManagerDataSource(URL, USERNAME, PASSWORD);
-        memberRepository = new MemberRepositoryV3(dataSource);
+    @TestConfiguration//위에 repository들을 주입하고, 다음애들도 빈에 등록해줘야 함...해당 테스트 실행 시 스프링 부트가 자동으로 추가빈들 등록해줌
+    static class TestConfig{
+        @Bean
+        DataSource dataSource(){
+            return new DriverManagerDataSource(URL,USERNAME, PASSWORD);
+        }
 
-        PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
-        memberService = new MemberServiceV3_2(transactionManager, memberRepository);
+        @Bean//프록시가 뭐 마법이 아님, 결국 트랜잭션매니저 가지고 하는거임
+        PlatformTransactionManager transactionManager(){
+            return new DataSourceTransactionManager(dataSource());
+        }
+
+        @Bean
+        MemberRepositoryV3 memberRepositoryV3(){
+            return new MemberRepositoryV3(dataSource());
+        }
+
+        @Bean
+        MemberServiceV3_3 memberServiceV3_3(){
+            return new MemberServiceV3_3(memberRepositoryV3());
+        }
     }
+
+//    @BeforeEach
+//    void before(){
+//        DriverManagerDataSource dataSource = new DriverManagerDataSource(URL, USERNAME, PASSWORD);
+//        memberRepository = new MemberRepositoryV3(dataSource);
+//
+//        memberService = new MemberServiceV3_3(memberRepository);
+//    }
 
     @AfterEach
     void after() throws SQLException {
