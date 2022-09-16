@@ -1,6 +1,7 @@
 package hello.jdbc.respository;
 
 import hello.jdbc.domain.Member;
+import hello.jdbc.respository.ex.MyDbException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.support.JdbcUtils;
@@ -10,20 +11,22 @@ import java.sql.*;
 import java.util.NoSuchElementException;
 
 /**
- * 트랜잭션 - 트랜잭션 매니저 사용해서 동일한 커넥션 이용하도록 함
- * DataSourceUtils.getConnection();
- * DataSourceUtils.releaseConnection();
+ * 예외 누수 문제 해결
+ * 체크예외를 런타임 예외로 변경 => 덕분에 서비스계층의 순수성(순수자바) 유지가능. 이후에 jdbc를 다른애로 변경하더라도 서비스는 변겅안할 수 있음.
+ * MemberRepository 인터페이스 사용
+ * throws SQLException 제거
  */
 @Slf4j
-public class MemberRepositoryV3 implements MemberRepositoryEx{
+public class MemberRepositoryV4_1 implements MemberRepository{
 
     private final DataSource dataSource;
 
-    public MemberRepositoryV3(DataSource dataSource){
+    public MemberRepositoryV4_1(DataSource dataSource){
         this.dataSource = dataSource;
     }
 
-    public Member save(Member member) throws SQLException {
+    @Override
+    public Member save(Member member) {
         String sql = "insert into member(member_id, money) values (?,?)"; //참고로 ? 이런 파라미터 바인딩을 써야 sql injection 예방가능함.
 
         Connection con = null;
@@ -39,14 +42,14 @@ public class MemberRepositoryV3 implements MemberRepositoryEx{
             pstmt.executeUpdate();// Statement 통해 준비된 sql을 커넥션통해서 디비로 전달
             return member;
         } catch (SQLException e) {
-            log.error("db error", e);
-            throw e;
+            throw new MyDbException(e);
         }finally {
             close(con, pstmt, null);
         }
     }
 
-    public Member findById(String memberId) throws SQLException {
+    @Override
+    public Member findById(String memberId) {
         String sql = "select * from member where member_id = ?";
 
         //try-catch때매 어쩔수없이 바깥에 선언할 수 밖에ㅠ
@@ -54,8 +57,8 @@ public class MemberRepositoryV3 implements MemberRepositoryEx{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
-        con = getConnection();
         try {
+            con = getConnection();
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, memberId);
 
@@ -70,15 +73,15 @@ public class MemberRepositoryV3 implements MemberRepositoryEx{
             }
 
         } catch (SQLException e) {
-            log.error("db error", e);
-            throw e;
+            throw new MyDbException(e);
         }finally {
             close(con, pstmt, rs);
         }
     }
 
 
-    public void update(String memberId, int moeny) throws SQLException {
+    @Override
+    public void update(String memberId, int moeny) {
         String sql = "update member set money=? where member_id=?";
 
         Connection con = null;
@@ -93,14 +96,14 @@ public class MemberRepositoryV3 implements MemberRepositoryEx{
             int resultSize = pstmt.executeUpdate();// Statement 통해 준비된 sql을 커넥션통해서 디비로 전달
             log.info("resultSize={}", resultSize);
         } catch (SQLException e) {
-            log.error("db error", e);
-            throw e;
+            new MyDbException(e);
         }finally {
             close(con, pstmt, null);
         }
     }
 
-    public void delete(String memberId) throws SQLException {
+    @Override
+    public void delete(String memberId) {
         String sql = "delete from member where member_id=?";
 
         Connection con = null;
@@ -114,8 +117,7 @@ public class MemberRepositoryV3 implements MemberRepositoryEx{
             int resultSize = pstmt.executeUpdate();// Statement 통해 준비된 sql을 커넥션통해서 디비로 전달
             log.info("resultSize={}", resultSize);
         } catch (SQLException e) {
-            log.error("db error", e);
-            throw e;
+            new MyDbException(e);
         }finally {
             close(con, pstmt, null);
         }
