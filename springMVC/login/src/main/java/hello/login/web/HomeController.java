@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.Optional;
 
 @Slf4j
@@ -27,7 +29,7 @@ public class HomeController {
     }
 
     //쿠키 없는 사용자도 들어오기에 required=false임
-    @GetMapping("/")
+//    @GetMapping("/")
     public String homeLogin(@CookieValue(name = "memberId", required = false) Long memberId, Model model){
 
         if(memberId==null){
@@ -44,7 +46,7 @@ public class HomeController {
         return "loginHome";
     }
 
-    @PostMapping("/logout")
+//    @PostMapping("/logout")
     public String logout(HttpServletResponse response){
         expireCookie(response, "memberId");
         return "redirect:/";
@@ -54,5 +56,24 @@ public class HomeController {
         Cookie cookie = new Cookie(cookieName, null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
+    }
+
+    @GetMapping("/")
+    public String homeLoginV3(HttpServletRequest request, Model model){
+        HttpSession session = request.getSession(false);
+        if(session == null){
+            return "home";
+        }
+
+        Member loginMember = (Member)session.getAttribute(SessionConst.LOGIN_MEMBER);
+
+        //세션에 회원 데이터가 없으면 home
+        if(loginMember == null){
+            return "home";
+        }
+
+        //세션이 유지되면 로그인으로 이동
+        model.addAttribute("member", loginMember);
+        return "loginhome";
     }
 }
