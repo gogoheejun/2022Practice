@@ -15,6 +15,8 @@ public class TestDataInit {
 
     /**
      * 확인용 초기 데이터 추가
+     * ApplicationReadyEvent를 쓰면 AOP를 포함한 스프링 컨테이너가 완전히 초기화된 이후에 호출됨
+     * 반면에 @PostConstruct를 사용하면 AOP와 같은 부분이 아직 다 처리되지 않은 시점에 호출될 수 있음.
      */
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
