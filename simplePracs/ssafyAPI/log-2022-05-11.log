@@ -1,0 +1,5 @@
+[2m2022-05-11 03:10:13.965[0;39m [33m WARN[0;39m [35m2856[0;39m [2m---[0;39m [2m[l-1 housekeeper][0;39m [36mcom.zaxxer.hikari.pool.HikariPool       [0;39m [2m:[0;39m HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=55m47s915ms80µs800ns).
+[2m2022-05-11 09:02:24.360[0;39m [33m WARN[0;39m [35m2856[0;39m [2m---[0;39m [2m[l-1 housekeeper][0;39m [36mcom.zaxxer.hikari.pool.HikariPool       [0;39m [2m:[0;39m HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=3h36m12s675ms450µs200ns).
+[2m2022-05-11 09:44:57.820[0;39m [32mDEBUG[0;39m [35m2856[0;39m [2m---[0;39m [2m[nio-9999-exec-8][0;39m [36mc.ssafy.vue.controller.BoardController  [0;39m [2m:[0;39m retrieveBoard - 호출
+[2m2022-05-11 09:44:57.931[0;39m [32mDEBUG[0;39m [35m2856[0;39m [2m---[0;39m [2m[nio-9999-exec-3][0;39m [36mc.ssafy.vue.controller.BoardController  [0;39m [2m:[0;39m retrieveBoard - 호출
+[2m2022-05-11 10:03:24.310[0;39m [32m INFO[0;39m [35m2856[0;39m [2m---[0;39m [2m[(829)-127.0.0.1][0;39m [36minMXBeanRegistrar$SpringApplicationAdmin[0;39m [2m:[0;39m Application shutdown requested.

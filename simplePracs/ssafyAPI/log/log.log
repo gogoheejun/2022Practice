@@ -1,0 +1,8 @@
+2022-09-28 14:58:58.636  INFO 27418 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2022-09-28 14:58:58.638  INFO 27418 --- [  restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2022-09-28 14:58:59.321  INFO 27418 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 9999 (http)
+2022-09-28 14:58:59.426  INFO 27418 --- [  restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 788 ms
+2022-09-28 14:58:59.773  INFO 27418 --- [  restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2022-09-28 14:58:59.869  INFO 27418 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 9999 (http) with context path '/vue'
+2022-09-28 15:01:22.356  INFO 27418 --- [nio-9999-exec-6] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2022-09-28 15:01:22.360  INFO 27418 --- [nio-9999-exec-6] o.s.web.servlet.DispatcherServlet        : Completed initialization in 4 ms
